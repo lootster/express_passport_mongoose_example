@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const passport = require("passport");
 
 async function registerNewUser(req, res) {
   var user = new User();
@@ -12,27 +11,26 @@ async function registerNewUser(req, res) {
   return res.json({ user: user.toAuthJSON() });
 }
 
-function login(req, res, next) {
-  if (!req.body.user.email) {
+async function login(req, res) {
+  const email = req.body.user.email;
+  if (!email) {
     return res.status(422).json({ errors: { email: ["can't be blank"] } });
   }
 
-  if (!req.body.user.password) {
+  const password = req.body.user.password;
+  if (!password) {
     return res.status(422).json({ errors: { password: ["can't be blank"] } });
   }
 
-  passport.authenticate("local", { session: false }, function(err, user, info) {
-    if (err) {
-      return next(err);
-    }
+  let user = await User.findOne({ email: email });
+  if (!user || !user.validPassword(password)) {
+    return res.status(422).json({
+      errors: { "email or password": ["is invalid"] }
+    });
+  }
 
-    if (user) {
-      user.token = user.generateJWT();
-      return res.json({ user: user.toAuthJSON() });
-    } else {
-      return res.status(422).json(info);
-    }
-  })(req, res, next);
+  user.token = user.generateJWT();
+  return res.json({ user: user.toAuthJSON() });
 }
 
 async function getCurrentUser(req, res) {

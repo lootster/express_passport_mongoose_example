@@ -5,7 +5,7 @@ const jwt = require("../../middlewares/jwt_middleware");
 
 router.post("/users", handleAsyncError(userHandler.registerNewUser));
 
-router.post("/users/login", userHandler.login);
+router.post("/users/login", handleAsyncError(userHandler.login));
 
 router.get("/user", jwt.required, handleAsyncError(userHandler.getCurrentUser));
 
