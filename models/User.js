@@ -56,6 +56,8 @@ UserSchema.methods.generateJWT = function() {
   );
 };
 
+// Currently this verifyJWT is only used in test cases.
+// In the route handler, we use express-jwt package to verify the JWT tokens
 UserSchema.methods.verifyJWT = function(token) {
   try {
     jwt.verify(token, secret);
