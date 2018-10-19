@@ -26,7 +26,6 @@
     "express": "^4.16.4",
     "express-async-wrap": "^1.0.0",
     "express-jwt": "^5.3.1",
-    "express-session": "^1.15.6",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "method-override": "^3.0.0",
