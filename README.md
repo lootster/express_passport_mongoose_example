@@ -73,7 +73,7 @@ Note: you need a JWT token to access this API.
 In order to get access to the protected API, you need to include a "Authorization" HTTP header in your requests, e.g.
 
 ```txt
-Authorization: Token <put your JWT token value here>
+Authorization: Bearer <put your JWT token value here>
 ```
 
 The JWT token is returned in the JSON response of the login API.
