@@ -66,7 +66,7 @@ Sample request body:
 - GET /api/profiles/:username
 
 Get the profile of the specified user
-Note: you need a JWT token to access this API. 
+Note: this is a public API. You don't need JWT token to access this API.
 
 ## Access protected API endpoints with JWT token
 
