@@ -28,8 +28,14 @@ async function login(req, res) {
       errors: { "email or password": ["is invalid"] }
     });
   }
+  // send token via res.cookie()
+  const token = user.generateJWT();
+  // TODO: we should also set "secure" option to true in the cookie, if our service supports HTTPS
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    sameSite: true
+  });
 
-  user.token = user.generateJWT();
   return res.json({ user: user.toAuthJSON() });
 }
 

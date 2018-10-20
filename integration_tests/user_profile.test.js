@@ -18,6 +18,7 @@ describe("User profile", () => {
     let response = await request(app).get("/api/profiles/badname");
     expect(response.status).toBe(404);
   });
+
   test("Get user profiles without login", async () => {
     let response = await request(app).get("/api/profiles/tom");
     expect(response.status).toBe(200);
@@ -29,13 +30,11 @@ describe("User profile", () => {
   });
 
   test("Get user profiles after login", async () => {
+    const agent = request.agent(app);
     let loginUser = fixtures.users.jacky;
-    let loginResponse = await loginAs(app, loginUser.email, loginUser.password);
-    let jwtToken = loginResponse.token;
+    await loginAs(agent, loginUser.email, loginUser.password);
 
-    let response = await request(app)
-      .get("/api/profiles/tom")
-      .set("Authorization", "Bearer " + jwtToken);
+    let response = await agent.get("/api/profiles/tom");
     expect(response.status).toBe(200);
 
     let userProfile = response.body.profile;

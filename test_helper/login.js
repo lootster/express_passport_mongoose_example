@@ -1,7 +1,5 @@
-const request = require("supertest");
-
-async function loginAs(app, email, password) {
-  let response = await request(app)
+async function loginAs(agent, email, password) {
+  let response = await agent
     .post("/api/users/login")
     .send({ user: { email, password } });
 

@@ -214,6 +214,5 @@ describe("Generate user profile as JSON", () => {
     expect(userProfile.email).toEqual(email);
     expect(userProfile.bio).toEqual(bio);
     expect(userProfile.image).toEqual(image);
-    expect(userProfile.token).toBeDefined();
   });
 });

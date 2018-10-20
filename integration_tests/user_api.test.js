@@ -11,15 +11,10 @@ beforeAll(fixtureLoader.load);
 
 afterAll(testDB.teardown);
 
-let jwtToken;
-
-async function loginAsTom() {
+async function loginAsTom(agent) {
   let email = fixtures.users.tom.email;
   let password = fixtures.users.tom.password;
-  let response = await request(app)
-    .post("/api/users/login")
-    .send({ user: { email, password } });
-  jwtToken = response.body.user.token;
+  await agent.post("/api/users/login").send({ user: { email, password } });
 }
 
 describe("Accessing User API without login", () => {
@@ -43,18 +38,16 @@ describe("Accessing User API without login", () => {
 });
 
 describe("Accessing User API after login", () => {
-  beforeAll(loginAsTom);
+  const agent = request.agent(app);
+
+  beforeAll(() => loginAsTom(agent));
 
   test("Get information on the current user", async () => {
-    let response = await request(app)
-      .get("/api/user")
-      .set("Authorization", "Bearer " + jwtToken);
+    let response = await agent.get("/api/user");
     let userJson = response.body.user;
     expect(response.statusCode).toBe(200);
     expect(userJson).toBeDefined();
     expect(userJson.email).toEqual(fixtures.users.tom.email);
-    expect(userJson.token).toBeDefined();
-    expect(userJson.token).not.toBeNull();
   });
 
   test("Update user profile", async () => {
@@ -65,10 +58,7 @@ describe("Accessing User API after login", () => {
       bio: newBio,
       image: newImage
     };
-    let response = await request(app)
-      .put("/api/user")
-      .send({ user: updatedUser })
-      .set("Authorization", "Bearer " + jwtToken);
+    let response = await agent.put("/api/user").send({ user: updatedUser });
 
     let userJson = response.body.user;
     expect(response.statusCode).toBe(200);
@@ -78,10 +68,7 @@ describe("Accessing User API after login", () => {
   });
 
   test("Update user profile with no user information", async () => {
-    let response = await request(app)
-      .put("/api/user")
-      .send({})
-      .set("Authorization", "Bearer " + jwtToken);
+    let response = await agent.put("/api/user").send({});
     expect(response.statusCode).toBe(422);
   });
 });

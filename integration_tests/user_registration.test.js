@@ -26,7 +26,6 @@ describe("New user registration", () => {
     expect(userJson).toBeDefined();
     expect(userJson.username).toEqual(username);
     expect(userJson.email).toEqual(email);
-    expect(userJson.token).toBeDefined();
   });
 
   test("Register with duplicated username should fail", async () => {
